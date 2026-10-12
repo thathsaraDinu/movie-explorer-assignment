@@ -12,7 +12,6 @@ import {
 import { alpha } from "@mui/material/styles";
 import { LocalMoviesRounded, ArrowForwardRounded } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import { tokens } from "../theme/theme";
 import { useAuth } from "../context/AuthContext";
 
 type LoginLocationState = {
