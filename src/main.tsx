@@ -6,17 +6,21 @@ import "./index.css";
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { ThemeModeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "@emotion/react";
+import { theme } from "./theme/theme";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeModeProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <FavoritesProvider>
-            <App />
-          </FavoritesProvider>
-        </BrowserRouter>
-      </AuthProvider>
-    </ThemeModeProvider>
+    <ThemeProvider theme={theme}>
+      <ThemeModeProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <FavoritesProvider>
+              <App />
+            </FavoritesProvider>
+          </BrowserRouter>
+        </AuthProvider>
+      </ThemeModeProvider>
+    </ThemeProvider>
   </StrictMode>,
 );

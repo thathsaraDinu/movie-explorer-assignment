@@ -2,9 +2,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { MovieDetailsPage } from "./pages/MovieDetailsPage";
 import { FavoritesPage } from "./pages/FavoritesPage";
-import { Navbar } from "./components/Navbar";
 import { LoginPage } from "./pages/LoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoutes";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
