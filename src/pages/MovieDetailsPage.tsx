@@ -9,6 +9,7 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
+import { alpha, useTheme } from "@mui/material/styles";
 import {
   ArrowBackRounded,
   PlayArrowRounded,
@@ -16,7 +17,6 @@ import {
   MovieOutlined,
   PersonOutlineRounded,
 } from "@mui/icons-material";
-import { alpha } from "@mui/material/styles";
 import tmdb from "../api/tmdb";
 import { tokens } from "../theme/theme";
 
@@ -51,10 +51,15 @@ type Videos = {
 };
 
 const imageBase = "https://image.tmdb.org/t/p";
+const heroText = "#FFFFFF";
+const heroMuted = "rgba(255,255,255,0.7)";
+const heroBorder = "rgba(255,255,255,0.14)";
 
 export function MovieDetailsPage() {
   const { movieId } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
 
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [cast, setCast] = useState<Credits["cast"]>([]);
@@ -170,26 +175,20 @@ export function MovieDetailsPage() {
 
   return (
     <Box sx={{ color: "text.primary", pb: 7 }}>
-      {/* Cinematic hero */}
+      {/* Cinematic hero: deliberately dark in both themes */}
       <Box
         sx={{
           position: "relative",
           isolation: "isolate",
           overflow: "hidden",
-          backgroundColor: "background.paper",
+          color: heroText,
+          backgroundColor: "#100F0E",
           backgroundImage: hasBackdrop
-            ? `linear-gradient(90deg, ${alpha(tokens.night, 0.98)} 0%, ${alpha(tokens.night, 0.88)} 38%, ${alpha(tokens.night, 0.48)} 100%), linear-gradient(0deg, ${tokens.night} 0%, transparent 48%), url(${imageBase}/original${movie.backdrop_path})`
-            : `radial-gradient(ellipse at 80% 15%, ${alpha(tokens.saffron, 0.12)}, transparent 45%)`,
+            ? `linear-gradient(90deg, rgba(12,10,9,0.97) 0%, rgba(12,10,9,0.88) 38%, rgba(12,10,9,0.58) 72%, rgba(12,10,9,0.4) 100%), linear-gradient(0deg, #100F0E 0%, rgba(16,15,14,0.15) 65%, rgba(16,15,14,0.3) 100%), url(${imageBase}/original${movie.backdrop_path})`
+            : `radial-gradient(ellipse at 80% 15%, ${alpha(tokens.saffron, 0.16)}, transparent 45%), linear-gradient(145deg, #211B1A, #100F0E)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-            borderBottom: `1px solid ${tokens.line}`,
-            pointerEvents: "none",
-            zIndex: -1,
-          },
+          borderBottom: `1px solid ${isDark ? tokens.line : "rgba(0,0,0,0.12)"}`,
         }}
       >
         <Box
@@ -206,10 +205,10 @@ export function MovieDetailsPage() {
             onClick={() => navigate(-1)}
             sx={{
               mb: { xs: 3, md: 5 },
-              color: "text.secondary",
+              color: heroMuted,
               "&:hover": {
-                color: "primary.main",
-                bgcolor: alpha(tokens.saffron, 0.08),
+                color: heroText,
+                bgcolor: "rgba(255,255,255,0.08)",
               },
             }}
           >
@@ -240,9 +239,9 @@ export function MovieDetailsPage() {
                   mx: { xs: "auto", sm: 0 },
                   aspectRatio: "2 / 3",
                   objectFit: "cover",
-                  borderRadius: 2,
-                  border: `1px solid ${alpha("#FFFFFF", 0.12)}`,
-                  boxShadow: `0 24px 70px ${alpha("#000000", 0.45)}`,
+                  borderRadius: 1.5,
+                  border: `1px solid ${heroBorder}`,
+                  boxShadow: "0 24px 70px rgba(0,0,0,0.5)",
                 }}
               />
             ) : (
@@ -252,9 +251,10 @@ export function MovieDetailsPage() {
                   placeItems: "center",
                   width: { xs: "100%", sm: 220, md: 280 },
                   aspectRatio: "2 / 3",
-                  borderRadius: 2,
-                  bgcolor: "background.paper",
-                  color: "text.secondary",
+                  borderRadius: 1.5,
+                  bgcolor: "rgba(255,255,255,0.05)",
+                  border: `1px solid ${heroBorder}`,
+                  color: heroMuted,
                 }}
               >
                 <MovieOutlined sx={{ fontSize: 52 }} />
@@ -278,6 +278,7 @@ export function MovieDetailsPage() {
               <Typography
                 variant="h1"
                 sx={{
+                  color: heroText,
                   fontSize: {
                     xs: "2.5rem",
                     sm: "2.8rem",
@@ -300,15 +301,19 @@ export function MovieDetailsPage() {
                   alignItems: "center",
                   gap: 1.5,
                   mb: 3,
-                  color: "text.secondary",
+                  color: heroMuted,
                 }}
               >
                 {releaseYear && (
-                  <Typography variant="body2">{releaseYear}</Typography>
+                  <Typography variant="body2" sx={{ color: heroMuted }}>
+                    {releaseYear}
+                  </Typography>
                 )}
 
                 {releaseYear && validRating && (
-                  <Typography sx={{ opacity: 0.45 }}>•</Typography>
+                  <Typography sx={{ color: "rgba(255,255,255,0.4)" }}>
+                    •
+                  </Typography>
                 )}
 
                 {validRating && (
@@ -323,11 +328,11 @@ export function MovieDetailsPage() {
                     <StarRounded sx={{ fontSize: 20 }} />
                     <Typography
                       variant="body2"
-                      sx={{ color: "text.primary", fontWeight: 800 }}
+                      sx={{ color: heroText, fontWeight: 800 }}
                     >
                       {rating.toFixed(1)}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{ color: heroMuted }}>
                       / 10
                     </Typography>
                   </Box>
@@ -349,9 +354,9 @@ export function MovieDetailsPage() {
                       label={genre.name}
                       size="small"
                       sx={{
-                        color: "text.primary",
-                        bgcolor: alpha("#FFFFFF", 0.06),
-                        border: `1px solid ${tokens.line}`,
+                        color: heroText,
+                        bgcolor: "rgba(255,255,255,0.07)",
+                        border: `1px solid ${heroBorder}`,
                         fontWeight: 600,
                         "& .MuiChip-label": { px: 1.5 },
                       }}
@@ -362,7 +367,7 @@ export function MovieDetailsPage() {
 
               <Typography
                 sx={{
-                  color: "text.secondary",
+                  color: heroMuted,
                   fontSize: "0.7rem",
                   fontWeight: 800,
                   letterSpacing: "0.16em",
@@ -378,7 +383,7 @@ export function MovieDetailsPage() {
                   maxWidth: 720,
                   fontSize: { xs: "0.95rem", md: "1.05rem" },
                   lineHeight: 1.9,
-                  color: alpha(tokens.text, 0.86),
+                  color: "rgba(255,255,255,0.84)",
                   whiteSpace: "pre-line",
                 }}
               >
@@ -403,6 +408,9 @@ export function MovieDetailsPage() {
                     py: 1.3,
                     fontWeight: 800,
                     boxShadow: "none",
+                    "&:hover": {
+                      boxShadow: `0 6px 22px ${alpha(theme.palette.primary.main, 0.22)}`,
+                    },
                   }}
                 >
                   Watch trailer
@@ -413,7 +421,7 @@ export function MovieDetailsPage() {
         </Box>
       </Box>
 
-      {/* Cast */}
+      {/* Cast: adapts to the active app theme */}
       <Box
         sx={{
           maxWidth: 1440,
@@ -441,7 +449,11 @@ export function MovieDetailsPage() {
           <Box>
             <Typography
               variant="h4"
-              sx={{ fontWeight: 700, fontSize: "1.6rem" }}
+              sx={{
+                fontWeight: 700,
+                fontSize: "1.6rem",
+                letterSpacing: "-0.025em",
+              }}
             >
               The cast
             </Typography>
@@ -477,12 +489,13 @@ export function MovieDetailsPage() {
                   alignItems: "center",
                   gap: 1.5,
                   p: { xs: 1.25, sm: 1.75 },
-                  border: `1px solid ${tokens.line}`,
-                  borderRadius: 2,
-                  bgcolor: alpha(tokens.plum, 0.65),
+                  border: 1,
+                  borderColor: "divider",
+                  borderRadius: 1.5,
+                  bgcolor: "background.paper",
                   transition: "border-color 180ms ease, transform 180ms ease",
                   "&:hover": {
-                    borderColor: alpha(tokens.saffron, 0.35),
+                    borderColor: alpha(theme.palette.primary.main, 0.5),
                     transform: "translateY(-2px)",
                   },
                 }}
@@ -491,15 +504,15 @@ export function MovieDetailsPage() {
                   <Box
                     component="img"
                     src={`${imageBase}/w185${person.profile_path}`}
-                    alt=""
+                    alt={person.name}
                     loading="lazy"
                     sx={{
                       width: { xs: 44, sm: 52 },
                       height: { xs: 44, sm: 52 },
                       flexShrink: 0,
                       objectFit: "cover",
-                      borderRadius: 1.5,
-                      bgcolor: "background.default",
+                      borderRadius: 1,
+                      bgcolor: "action.hover",
                     }}
                   />
                 ) : (
@@ -510,8 +523,8 @@ export function MovieDetailsPage() {
                       flexShrink: 0,
                       display: "grid",
                       placeItems: "center",
-                      borderRadius: 1.5,
-                      bgcolor: alpha(tokens.saffron, 0.08),
+                      borderRadius: 1,
+                      bgcolor: "action.hover",
                       color: "text.secondary",
                     }}
                   >
@@ -523,7 +536,7 @@ export function MovieDetailsPage() {
                   <Typography
                     sx={{
                       fontSize: "0.85rem",
-                      fontWeight: 800,
+                      fontWeight: 750,
                       lineHeight: 1.4,
                       overflowWrap: "anywhere",
                     }}
@@ -552,7 +565,7 @@ export function MovieDetailsPage() {
           </Typography>
         )}
 
-        <Divider sx={{ mt: 5, borderColor: tokens.line }} />
+        <Divider sx={{ mt: 5, borderColor: "divider" }} />
       </Box>
     </Box>
   );

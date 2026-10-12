@@ -93,12 +93,15 @@ function PosterSkeletons({ count }: { count: number }) {
           <Skeleton
             variant="rounded"
             animation="wave"
-            sx={{
+            sx={(theme) => ({
               width: "100%",
               height: "100%",
               borderRadius: `${tokens.radius}px`,
-              bgcolor: alpha("#FFFFFF", 0.045),
-            }}
+              bgcolor: alpha(
+                theme.palette.text.primary,
+                theme.palette.mode === "dark" ? 0.045 : 0.07,
+              ),
+            })}
           />
         </Box>
       ))}
@@ -138,14 +141,21 @@ function Notice({
       }}
     >
       <Box
-        sx={{
-          width: 52,
-          height: 52,
-          display: "grid",
-          placeItems: "center",
-          borderRadius: "16px",
-          bgcolor: alpha(tone === "error" ? "#FF5C7A" : "#F5B84B", 0.1),
-          color: tone === "error" ? "error.main" : "primary.main",
+        sx={(theme) => {
+          const accent =
+            tone === "error"
+              ? theme.palette.error.main
+              : theme.palette.primary.main;
+
+          return {
+            width: 52,
+            height: 52,
+            display: "grid",
+            placeItems: "center",
+            borderRadius: "16px",
+            bgcolor: alpha(accent, 0.1),
+            color: accent,
+          };
         }}
       >
         {tone === "error" ? <CloseRounded /> : <LocalMoviesRounded />}
@@ -518,40 +528,47 @@ export function HomePage() {
     >
       {/* Hero */}
       <Box
-        sx={{
+        sx={(theme) => ({
           position: "relative",
           mb: { xs: 5, sm: 7 },
           overflow: "hidden",
           borderRadius: { xs: "18px", sm: "24px" },
           border: 1,
           borderColor: "divider",
-          background: `
-            radial-gradient(ellipse at 90% 0%, ${alpha(tokens.saffron, 0.12)}, transparent 42%),
-            linear-gradient(135deg, ${tokens.plum} 0%, ${tokens.night} 80%)
-          `,
+          background:
+            theme.palette.mode === "dark"
+              ? `
+                radial-gradient(ellipse at 90% 0%, ${alpha(tokens.saffron, 0.12)}, transparent 42%),
+                linear-gradient(135deg, ${tokens.plum} 0%, ${tokens.night} 80%)
+              `
+              : `
+                radial-gradient(ellipse at 90% 0%, ${alpha(tokens.saffron, 0.18)}, transparent 48%),
+                linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)
+              `,
           px: { xs: 2.5, sm: 4, md: 6 },
           py: { xs: 4, sm: 5, md: 6 },
-        }}
+        })}
       >
         <Box
-          sx={{
+          sx={(theme) => ({
             position: "absolute",
             right: { xs: -35, sm: 30, md: 65 },
             top: "50%",
             transform: "translateY(-50%) rotate(-12deg)",
-            color: alpha(tokens.saffron, 0.07),
+            color: alpha(
+              tokens.saffron,
+              theme.palette.mode === "dark" ? 0.07 : 0.12,
+            ),
             pointerEvents: "none",
             display: { xs: "none", sm: "block" },
-          }}
+          })}
           aria-hidden="true"
         >
           <LocalMoviesRounded sx={{ fontSize: { sm: 180, md: 240 } }} />
         </Box>
 
         <Box sx={{ position: "relative", zIndex: 1, maxWidth: 760 }}>
-          <SectionEyebrow>
-            Your personal cinema guide
-          </SectionEyebrow>
+          <SectionEyebrow>Your personal cinema guide</SectionEyebrow>
 
           <Typography
             component="h1"
@@ -718,9 +735,7 @@ export function HomePage() {
             }}
           >
             <Box>
-              <SectionEyebrow>
-                Worth a watch
-              </SectionEyebrow>
+              <SectionEyebrow>Worth a watch</SectionEyebrow>
 
               <Typography
                 id="trending-title"
@@ -778,9 +793,7 @@ export function HomePage() {
       {hasActiveSearch && (
         <Box component="section" aria-labelledby="results-title">
           <Box sx={{ mb: 3.5 }}>
-            <SectionEyebrow>
-              Movie discovery
-            </SectionEyebrow>
+            <SectionEyebrow>Movie discovery</SectionEyebrow>
 
             <Typography
               id="results-title"
