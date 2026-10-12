@@ -110,7 +110,7 @@ export default function Navbar() {
                 lineHeight: 1.15,
               }}
             >
-              Movie Explorer
+              Filmhouse
             </Typography>
 
             <Typography
@@ -123,7 +123,7 @@ export default function Navbar() {
                 textTransform: "uppercase",
               }}
             >
-              Your next favorite
+              FIND YOUR FRAME
             </Typography>
           </Box>
         </Box>
@@ -140,11 +140,7 @@ export default function Navbar() {
         >
           {isAuthenticated && (
             <>
-              <Button
-                component={Link}
-                to="/"
-                sx={navButtonSx(isActive("/"))}
-              >
+              <Button component={Link} to="/" sx={navButtonSx(isActive("/"))}>
                 Home
               </Button>
 
